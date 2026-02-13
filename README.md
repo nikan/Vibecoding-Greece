@@ -55,7 +55,11 @@
 
 ### Web development
 
-*Σύντομα...*
+### [Widgetizer](https://github.com/tsiger/widgetizer)
+**Συγγραφέας**: tsiger  
+**Περιγραφή**: Static visual website builder. Επιτρέπει στους χρήστες να δημιουργούν και να δημοσιεύουν ιστοσελίδες χωρίς κώδικα.  
+**Τεχνολογίες**: React, Express, Node.js, LiquidJS
+**Κατάσταση**: Σε Εξέλιξη
 
 ### Mobile development
 
