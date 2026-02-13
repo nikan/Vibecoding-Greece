@@ -1,2 +1,2 @@
 # Vibecoding-Greece
-Public repo for hosting the links to the project of the same name Facebook group members
+Δημόσιο αποθετήριο για τη φιλοξενία των συνδέσμων προς τα έργα των μελών της ομάδας Facebook με το ίδιο όνομα
