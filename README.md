@@ -30,6 +30,7 @@
 
 ```markdown
 ### [Όνομα Έργου](σύνδεσμος-προς-το-έργο)
+
 **Συγγραφέας**: Το Όνομά σας / Όνομα Χρήστη GitHub  
 **Περιγραφή**: Σύντομη περιγραφή του τι κάνει το έργο σας  
 **Τεχνολογίες**: Τεχνολογίες που χρησιμοποιούνται (π.χ., React, Python, Django, κλπ.)  
@@ -49,13 +50,23 @@
 
 ## 📋 Έργα
 
-*Τα έργα από τα μέλη της κοινότητάς μας θα παρατίθενται εδώ*
+_Τα έργα από τα μέλη της κοινότητάς μας θα παρατίθενται εδώ_
 
 ---
 
 ### Web development
 
+### [Codebase] (https://github.com/teokarts/cloud-codebase)
+
+**Συγγραφέας**: Thodoris Kartsiotis
+**Περιγραφή**: Οργάνωση code snippets. Κατηγορίες ανά γλώσσα προγραμματισμού, ανά project, grouping, favorites
+**Τεχνολογίες**: React, Supabase
+**Κατάσταση**: Ολοκληρωμένο (https://dide.pie.sch.gr/codebase)
+
+### Web development
+
 ### [Widgetizer](https://github.com/tsiger/widgetizer)
+
 **Συγγραφέας**: tsiger  
 **Περιγραφή**: Static visual website builder. Επιτρέπει στους χρήστες να δημιουργούν και να δημοσιεύουν ιστοσελίδες χωρίς κώδικα.  
 **Τεχνολογίες**: React, Express, Node.js, LiquidJS
@@ -63,27 +74,28 @@
 
 ### Mobile development
 
-*Σύντομα...*
+_Σύντομα..._
 
 ### Backend/APIs
 
-*Σύντομα...*
+_Σύντομα..._
 
 ### Data science/ML
 
-*Σύντομα...*
+_Σύντομα..._
 
 ### DevOps/Tools
 
-*Σύντομα...*
+_Σύντομα..._
 
 ### Άλλα
 
-### [leo - AI workflow handler](https://github.com/nikan/leo-releases)  
-**Συγγραφέας**: nikan 
+### [leo - AI workflow handler](https://github.com/nikan/leo-releases)
+
+**Συγγραφέας**: nikan
 **Περιγραφή**: VSCode extension που εκκινεί διαδικασία επίλυσης Github issue μέσω AI agent.  
 **Τεχνολογίες**: NodeJs, Typescript, Github Webhooks through [Smee](https://smee.io/), Github Copilot, Codex  
-**Κατάσταση**: Σε Εξέλιξη  
+**Κατάσταση**: Σε Εξέλιξη
 
 ## 🤝 Οδηγίες Κοινότητας
 
@@ -96,7 +108,7 @@
 ## 📞 Επικοινωνία
 
 - **Ομάδα Facebook**: [Vibecoding-Greece](https://www.facebook.com/groups/923120496824057)
-- **Συντηρητής Αποθετηρίου**: [@nikan](https://github.com/nikan) 
+- **Συντηρητής Αποθετηρίου**: [@nikan](https://github.com/nikan)
 
 ## 📜 Άδεια
 
