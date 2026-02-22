@@ -75,7 +75,11 @@
 
 ### DevOps/Tools
 
-*Σύντομα...*
+### [DomainsReseller MCP Server](https://github.com/Webhosting4U/Domain-Names-MCP-Server)
+**Συγγραφέας**: Webhosting4U  
+**Περιγραφή**: MCP server για διαχείριση domain names από το IDE με φυσική γλώσσα. 32 εργαλεία για καταχώρηση, μεταφορά, ανανέωση, DNS, nameservers και άλλα μέσω του Webhosting4U DomainsReseller API.  
+**Τεχνολογίες**: TypeScript, Cloudflare Workers, MCP (Model Context Protocol), Streamable HTTP, Zod  
+**Κατάσταση**: Ενεργό
 
 ### Άλλα
 
