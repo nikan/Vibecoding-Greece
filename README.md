@@ -94,7 +94,7 @@ _Σύντομα..._
 
 ### [leo - AI workflow handler](https://github.com/nikan/leo-releases)
 
-**Συγγραφέας**: nikan
+**Συγγραφέας**: nikan 
 **Περιγραφή**: VSCode extension που εκκινεί διαδικασία επίλυσης Github issue μέσω AI agent.  
 **Τεχνολογίες**: NodeJs, Typescript, Github Webhooks through [Smee](https://smee.io/), Github Copilot, Codex  
 **Κατάσταση**: Σε Εξέλιξη
