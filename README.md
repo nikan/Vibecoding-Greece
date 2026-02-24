@@ -63,8 +63,6 @@ _Τα έργα από τα μέλη της κοινότητάς μας θα πα
 **Τεχνολογίες**: React, Supabase
 **Κατάσταση**: Ολοκληρωμένο (https://dide.pie.sch.gr/codebase)
 
-### Web development
-
 ### [Widgetizer](https://github.com/tsiger/widgetizer)
 
 **Συγγραφέας**: tsiger  
