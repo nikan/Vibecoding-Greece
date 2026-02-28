@@ -90,6 +90,7 @@ _Σύντομα..._
 **Τεχνολογίες**: TypeScript, Cloudflare Workers, MCP (Model Context Protocol), Streamable HTTP, Zod  
 **Κατάσταση**: Ενεργό
 
+
 ### 📁 Κατηγορία: Άλλα
 
 ### [leo - AI workflow handler](https://github.com/nikan/leo-releases)
@@ -97,6 +98,14 @@ _Σύντομα..._
 **Συγγραφέας**: nikan  
 **Περιγραφή**: VSCode extension που εκκινεί διαδικασία επίλυσης Github issue μέσω AI agent.  
 **Τεχνολογίες**: NodeJs, Typescript, Github Webhooks through [Smee](https://smee.io/), Github Copilot, Codex  
+**Κατάσταση**: Σε Εξέλιξη
+
+
+### [lioncub (Mistral Chat)](https://github.com/nikan/lioncub-releases)
+
+**Συγγραφέας**: nikan  
+**Περιγραφή**: VSCode extension to add Mistral to the native VSCode chat  
+**Τεχνολογίες**: Node.js, npm, Visual Studio Code, Typescript  
 **Κατάσταση**: Σε Εξέλιξη
 
 ## 🤝 Οδηγίες Κοινότητας
