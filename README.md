@@ -89,6 +89,11 @@ _Σύντομα..._
 **Περιγραφή**: MCP server για διαχείριση domain names από το IDE με φυσική γλώσσα. 32 εργαλεία για καταχώρηση, μεταφορά, ανανέωση, DNS, nameservers και άλλα μέσω του Webhosting4U DomainsReseller API.  
 **Τεχνολογίες**: TypeScript, Cloudflare Workers, MCP (Model Context Protocol), Streamable HTTP, Zod  
 **Κατάσταση**: Ενεργό
+### [AI-Driven Development Lifecycle Framework](https://github.com/toons01/AI-Driven-Dev-Framework)
+**Συγγραφέας**: toons01  
+**Περιγραφή**: Open-source framework που δίνει δομή στην ανάπτυξη λογισμικού με AI agents. Περιλαμβάνει 22 specialized skills, 7 stack presets, persistent memory bank, quality gates και automated code review — όλα enforced πριν φύγει κώδικας σε production.  
+**Τεχνολογίες**: Markdown, Husky, GitHub Actions, ESLint, Playwright, Vitest  
+**Κατάσταση**: Ενεργό
 
 
 ### 📁 Κατηγορία: Άλλα
