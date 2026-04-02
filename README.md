@@ -106,6 +106,16 @@ _Σύντομα..._
 **Κατάσταση**: Σε Εξέλιξη
 
 
+
+### [leo-claude AI Declarative workflow Handler](https://github.com/nikan/leo-claude)
+
+**Συγγραφέας**: nikan  
+**Περιγραφή**: Skill που εκκινεί διαδικασία επίλυσης Github issue μέσω AI agent.  
+**Τεχνολογίες**: NodeJs, Typescript, Codex, Mistral Vibe, Github Copilot  
+**Κατάσταση**: Ενεργό
+
+
+
 ### [lioncub (Mistral Chat)](https://github.com/nikan/lioncub-releases)
 
 **Συγγραφέας**: nikan  
