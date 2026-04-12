@@ -95,6 +95,12 @@ _Σύντομα..._
 **Τεχνολογίες**: Markdown, Husky, GitHub Actions, ESLint, Playwright, Vitest  
 **Κατάσταση**: Ενεργό
 
+### [tsmcp-LSP](https://github.com/nikan/tsmcp-LSP)
+
+**Συγγραφέας**: nikan  
+**Περιγραφή**: MCP server που εκθέτει TypeScript semantic analysis (definitions, references, hover, symbols, call hierarchy) ως MCP tools για AI agents, μέσω typescript-language-server.  
+**Τεχνολογίες**: TypeScript, Node.js, MCP SDK, LSP, typescript-language-server  
+**Κατάσταση**: Ενεργό (v0.1.0)
 
 ### 📁 Κατηγορία: Άλλα
 
