@@ -1,0 +1,68 @@
+name: Add Project to README
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  add-project:
+    if: github.event.label.name == 'project-submission'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract project data
+        id: project
+        run: |
+          # Extract form fields from issue body
+          PROJECT_NAME=$(echo "${{ github.event.issue.body }}" | grep -oP 'project_name:\s*\K.*')
+          PROJECT_URL=$(echo "${{ github.event.issue.body }}" | grep -oP 'project_url:\s*\K.*')
+          AUTHOR=$(echo "${{ github.event.issue.body }}" | grep -oP 'author_name:\s*\K.*')
+          DESCRIPTION=$(echo "${{ github.event.issue.body }}" | grep -oP 'description:\s*\K.*')
+          TECH=$(echo "${{ github.event.issue.body }}" | grep -oP 'tech:\s*\K.*')
+          CATEGORY=$(echo "${{ github.event.issue.body }}" | grep -oP 'category:\s*\K.*')
+
+          # Normalize category to match marker keys
+          CATEGORY_KEY=$(echo "$CATEGORY" | tr ' ' '-' | tr '[:upper:]' '[:lower:]')
+          
+          echo "name=$PROJECT_NAME" >> $GITHUB_OUTPUT
+          echo "url=$PROJECT_URL" >> $GITHUB_OUTPUT
+          echo "author=$AUTHOR" >> $GITHUB_OUTPUT
+          echo "description=$DESCRIPTION" >> $GITHUB_OUTPUT
+          echo "tech=$TECH" >> $GITHUB_OUTPUT
+          echo "category=$CATEGORY" >> $GITHUB_OUTPUT
+          echo "category_key=$CATEGORY_KEY" >> $GITHUB_OUTPUT
+
+      - name: Update README
+        run: |
+          # Create the new entry
+          ENTRY="### [${{ steps.project.outputs.name }}](${{ steps.project.outputs.url }})
+
+          **Συγγραφέας**: ${{ steps.project.outputs.author }}  
+          **Περιγραφή**: ${{ steps.project.outputs.description }}  
+          **Τεχνολογίες**: ${{ steps.project.outputs.tech }}  
+          **Κατάσταση**: Νέο
+          
+          "
+
+          # Get category marker key
+          CATEGORY_KEY="${{ steps.project.outputs.category_key }}"
+
+          # Find the marker in README and insert after it
+          sed -i "/<!-- CATEGORY:$CATEGORY_KEY:START -->/a\\$ENTRY" README.md
+
+      - name: Commit and push
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git add README.md
+          git commit -m "Add project from issue #${{ github.event.issue.number }}"
+          git push
+
+      - name: Close and label issue
+        run: |
+          gh issue close ${{ github.event.issue.number }}
+          gh issue edit ${{ github.event.issue.number }} --remove-label "project-submission"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

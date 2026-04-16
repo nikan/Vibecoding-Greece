@@ -56,6 +56,8 @@ _Τα έργα από τα μέλη της κοινότητάς μας θα πα
 
 ### 📁 Κατηγορία: Web development
 
+<!-- CATEGORY:web-development:START -->
+
 ### [Codebase](https://github.com/teokarts/cloud-codebase)
 
 **Συγγραφέας**: Thodoris Kartsiotis / teokarts
@@ -69,6 +71,81 @@ _Τα έργα από τα μέλη της κοινότητάς μας θα πα
 **Περιγραφή**: Static visual website builder. Επιτρέπει στους χρήστες να δημιουργούν και να δημοσιεύουν ιστοσελίδες χωρίς κώδικα.  
 **Τεχνολογίες**: React, Express, Node.js, LiquidJS
 **Κατάσταση**: Σε Εξέλιξη
+
+<!-- CATEGORY:web-development:END -->
+
+### 📁 Κατηγορία: Mobile development
+
+<!-- CATEGORY:mobile-development:START -->
+_Sύντομα..._
+<!-- CATEGORY:mobile-development:END -->
+
+### 📁 Κατηγορία: Backend/APIs
+
+<!-- CATEGORY:backend/apis:START -->
+_Sύντομα..._
+<!-- CATEGORY:backend/apis:END -->
+
+### 📁 Κατηγορία: Data science/ML
+
+<!-- CATEGORY:data-science/ml:START -->
+_Sύντομα..._
+<!-- CATEGORY:data-science/ml:END -->
+
+### 📁 Κατηγορία: DevOps/Tools
+
+<!-- CATEGORY:devops/tools:START -->
+
+### [DomainsReseller MCP Server](https://github.com/Webhosting4U/Domain-Names-MCP-Server)
+**Συγγραφέας**: Webhosting4U  
+**Περιγραφή**: MCP server για διαχείριση domain names από το IDE με φυσική γλώσσα. 32 εργαλεία για καταχώρηση, μεταφορά, ανανέωση, DNS, nameservers και άλλα μέσω του Webhosting4U DomainsReseller API.  
+**Τεχνολογίες**: TypeScript, Cloudflare Workers, MCP (Model Context Protocol), Streamable HTTP, Zod  
+**Κατάσταση**: Ενεργό
+### [AI-Driven Development Lifecycle Framework](https://github.com/toons01/AI-Driven-Dev-Framework)
+**Συγγραφέας**: toons01  
+**Περιγραφή**: Open-source framework που δίνει δομή στην ανάπτυξη λογισμικού με AI agents. Περιλαμβάνει 22 specialized skills, 7 stack presets, persistent memory bank, quality gates και automated code review — όλα enforced πριν φύγει κώδικας σε production.  
+**Τεχνολογίες**: Markdown, Husky, GitHub Actions, ESLint, Playwright, Vitest  
+**Κατάσταση**: Ενεργό
+
+### [tsmcp-LSP](https://github.com/nikan/tsmcp-LSP)
+
+**Συγγραφέας**: nikan  
+**Περιγραφή**: MCP server που εκθέτει TypeScript semantic analysis (definitions, references, hover, symbols, call hierarchy) ως MCP tools για AI agents, μέσω typescript-language-server.  
+**Τεχνολογίες**: TypeScript, Node.js, MCP SDK, LSP, typescript-language-server  
+**Κατάσταση**: Ενεργό (v0.1.0)
+
+<!-- CATEGORY:devops/tools:END -->
+
+### 📁 Κατηγορία: Άλλα
+
+<!-- CATEGORY:other:START -->
+
+### [leo - AI workflow handler](https://github.com/nikan/leo-releases)
+
+**Συγγραφέας**: nikan  
+**Περιγραφή**: VSCode extension που εκκινεί διαδικασία επίλυσης Github issue μέσω AI agent.  
+**Τεχνολογίες**: NodeJs, Typescript, Github Webhooks through [Smee](https://smee.io/), Github Copilot, Codex  
+**Κατάσταση**: Σε Εξέλιξη
+
+
+
+### [leo-claude AI Declarative workflow Handler](https://github.com/nikan/leo-claude)
+
+**Συγγραφέας**: nikan  
+**Περιγραφή**: Skill που εκκινεί διαδικασία επίλυσης Github issue μέσω AI agent.  
+**Τεχνολογίες**: NodeJs, Typescript, Codex, Mistral Vibe, Github Copilot  
+**Κατάσταση**: Ενεργό
+
+
+
+### [lioncub (Mistral Chat)](https://github.com/nikan/lioncub-releases)
+
+**Συγγραφέας**: nikan  
+**Περιγραφή**: VSCode extension to add Mistral to the native VSCode chat  
+**Τεχνολογίες**: Node.js, npm, Visual Studio Code, Typescript  
+**Κατάσταση**: Σε Εξέλιξη
+
+<!-- CATEGORY:other:END
 
 ### 📁 Κατηγορία: Mobile development
 

@@ -1,0 +1,55 @@
+name: "Submit Project"
+description: "Submit your project to the Vibecoding-Greece community"
+labels: ["project-submission"]
+body:
+  - type: input
+    id: project_name
+    label: "Project Name"
+    description: "Name of your project"
+    placeholder: "My Awesome Project"
+    validations:
+      required: true
+
+  - type: input
+    id: project_url
+    label: "Project URL"
+    description: "Link to your project (GitHub, website, etc.)"
+    placeholder: "https://github.com/username/project"
+    validations:
+      required: true
+
+  - type: input
+    id: author_name
+    label: "Author Name"
+    description: "Your name or GitHub username"
+    placeholder: "John Doe / githubuser"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    label: "Description"
+    description: "Brief description of what your project does"
+    placeholder: "A brief description of your project..."
+    validations:
+      required: true
+
+  - type: input
+    id: tech
+    label: "Technologies"
+    description: "Tech stack used (e.g., React, Python, Django)"
+    placeholder: "React, Node.js, PostgreSQL"
+
+  - type: dropdown
+    id: category
+    label: "Category"
+    description: "Select the appropriate category"
+    options:
+      - "Web development"
+      - "Mobile development"
+      - "Backend/APIs"
+      - "Data Science/ML"
+      - "DevOps/Tools"
+      - "Other"
+    validations:
+      required: true
