@@ -19,7 +19,7 @@
 
 ### Νέος Τρόπος Υποβολής (GitHub Issues)
 
-[![Submit Project](https://img.shields.io/badge/-Submit_Project-2ea44f?style=flat&logo=github)](https://github.com/nikan/Vibecoding-Greece/issues/new?template=project.yml)
+[![Submit Project](https://img.shields.io/badge/-Submit_Project-2ea44f?style=flat&logo=github)](https://github.com/nikan/Vibecoding-Greece/issues/new?template=project)
 
 1. **Κάντε κλικ στο παραπάνω κουμπί** - Ανοίγει απευθείας τη φόρμα υποβολής
 2. **Συμπληρώστε τα στοιχεία** - Όνομα έργου, URL, περιγραφή, τεχνολογίες, κατηγορία
