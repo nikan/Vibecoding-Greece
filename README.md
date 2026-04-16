@@ -91,6 +91,14 @@ _Sύντομα..._
 ### 📁 Κατηγορία: DevOps/Tools
 
 <!-- CATEGORY:devops/tools:START -->
+### [gitpride](https://github.com/nikan/gitpride)
+
+**Συγγραφέας**: nikan  
+**Περιγραφή**: To use basic git commands through MCP and not the shell.  
+**Τεχνολογίες**: Node.js, Typescript  
+**Κατάσταση**: Νέο
+
+
 
 ### [DomainsReseller MCP Server](https://github.com/Webhosting4U/Domain-Names-MCP-Server)
 **Συγγραφέας**: Webhosting4U  
