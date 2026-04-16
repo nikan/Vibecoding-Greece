@@ -19,56 +19,40 @@ jobs:
       - name: Extract project data
         id: project
         run: |
-          # GitHub issue forms render the body as markdown
-          # Format: **Label** value
-          # We use Python for reliable parsing
+          # Debug: print raw issue body to see actual format
+          echo "=== RAW BODY START ==="
+          echo "${{ github.event.issue.body }}"
+          echo "=== RAW BODY END ==="
+          
+          # Save body to file for inspection
+          echo "${{ github.event.issue.body }}" > /tmp/issue_body.txt
+          
+          # Try different parsing approaches
           python3 << 'EOF'
           import os
-          import re
 
           body = os.environ.get('ISSUE_BODY', '')
+          
+          # Print what we received
+          print("=== PARSED BODY ===")
+          print(repr(body))
+          print("=== END ===")
 
-          # Print body for debugging
-          print("=== ISSUE BODY START ===", file=__import__('sys').stderr)
-          print(body, file=__import__('sys').stderr)
-          print("=== ISSUE BODY END ===", file=__import__('sys').stderr)
-
-          # Helper to extract value after a label
-          def extract(label, body):
-              # Match **Label**: value
-              pattern = rf'\*\*{re.escape(label)}\*\*:\s*(.+)'
-              match = re.search(pattern, body, re.MULTILINE)
-              if match:
-                  return match.group(1).strip()
-              return ''
-
-          # Extract fields
-          project_name = extract('Project Name', body)
-          project_url = extract('Project URL', body)
-          author = extract('Author Name', body)
-          description = extract('Description', body)
-          tech = extract('Technologies', body)
-          category = extract('Category', body)
-
-          # Check for update checkbox
-          is_update = 'true' if 'This is an update to an existing project' in body else 'false'
-
-          # Normalize category key
-          category_key = category.lower().replace(' ', '-').replace('/', '-')
-
-          print(f"DEBUG: name=[{project_name}]", file=__import__('sys').stderr)
-          print(f"DEBUG: url=[{project_url}]", file=__import__('sys').stderr)
-          print(f"DEBUG: category_key=[{category_key}]", file=__import__('sys').stderr)
-
-          # Output for GitHub Actions
-          print(f"name={project_name}")
-          print(f"url={project_url}")
-          print(f"author={author}")
-          print(f"description={description}")
-          print(f"tech={tech}")
-          print(f"category={category}")
-          print(f"category_key={category_key}")
-          print(f"is_update={is_update}")
+          # Try multiple patterns
+          import re
+          
+          # Pattern 1: **Label**: value
+          # Pattern 2: Label\r\n-----\r\nvalue
+          # Pattern 3: just look for URLs
+          
+          urls = re.findall(r'https?://[^\s]+', body)
+          print(f"Found URLs: {urls}")
+          
+          # Try to find Project URL label
+          for pattern in [r'\*\*Project URL\*\*:\s*(.+)', r'Project URL\r?\n-+\r?\n(.+)', r'Project URL\r?\n(.+)']:
+              matches = re.findall(pattern, body, re.MULTILINE | re.IGNORECASE)
+              if matches:
+                  print(f"Pattern {pattern} matched: {matches}")
           EOF
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
