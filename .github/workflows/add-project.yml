@@ -15,33 +15,57 @@ jobs:
       - name: Extract project data
         id: project
         run: |
-          # GitHub issue forms provide form data via form_inputs context
-          # This is the correct way to access issue form field values
-          PROJECT_NAME="${{ github.event.issue.form_inputs.project_name }}"
-          PROJECT_URL="${{ github.event.issue.form_inputs.project_url }}"
-          AUTHOR="${{ github.event.issue.form_inputs.author_name }}"
-          DESCRIPTION="${{ github.event.issue.form_inputs.description }}"
-          TECH="${{ github.event.issue.form_inputs.tech }}"
-          CATEGORY="${{ github.event.issue.form_inputs.category }}"
+          # GitHub issue forms render the body as markdown
+          # Format: **Label** value or ## Label followed by value
+          # We use Python for reliable parsing
+          python3 << 'EOF'
+          import os
+          import re
 
-          # Check if this is an update (from checkboxes)
-          if echo "${{ github.event.issue.form_inputs.update_existing }}" | grep -q "is_update"; then
-            IS_UPDATE="true"
-          else
-            IS_UPDATE="false"
-          fi
+          body = os.environ.get('ISSUE_BODY', '')
 
-          # Normalize category to match marker keys (replace / with -)
-          CATEGORY_KEY=$(echo "$CATEGORY" | tr ' ' '-' | tr '[:upper:]' '[:lower:]' | sed 's/\//-/g')
-          
-          echo "name=$PROJECT_NAME" >> $GITHUB_OUTPUT
-          echo "url=$PROJECT_URL" >> $GITHUB_OUTPUT
-          echo "author=$AUTHOR" >> $GITHUB_OUTPUT
-          echo "description=$DESCRIPTION" >> $GITHUB_OUTPUT
-          echo "tech=$TECH" >> $GITHUB_OUTPUT
-          echo "category=$CATEGORY" >> $GITHUB_OUTPUT
-          echo "category_key=$CATEGORY_KEY" >> $GITHUB_OUTPUT
-          echo "is_update=$IS_UPDATE" >> $GITHUB_OUTPUT
+          # Helper to extract value after a label
+          def extract(label, body, multiline=False):
+              # Match **Label**: value or ## Label\nvalue
+              patterns = [
+                  rf'\*\*{re.escape(label)}\*\*:\s*(.+)',
+                  rf'## {re.escape(label)}\n+(.+)',
+              ]
+              for p in patterns:
+                  match = re.search(p, body, re.MULTILINE)
+                  if match:
+                      value = match.group(1).strip()
+                      if multiline:
+                          return value
+                      return value.split('\n')[0].strip()
+              return ''
+
+          # Extract fields
+          project_name = extract('Project Name', body)
+          project_url = extract('Project URL', body)
+          author = extract('Author Name', body)
+          description = extract('Description', body)
+          tech = extract('Technologies', body)
+          category = extract('Category', body)
+
+          # Check for update checkbox
+          is_update = 'true' if 'This is an update to an existing project' in body else 'false'
+
+          # Normalize category key
+          category_key = category.lower().replace(' ', '-').replace('/', '-')
+
+          # Output for GitHub Actions
+          print(f"name={project_name}")
+          print(f"url={project_url}")
+          print(f"author={author}")
+          print(f"description={description}")
+          print(f"tech={tech}")
+          print(f"category={category}")
+          print(f"category_key={category_key}")
+          print(f"is_update={is_update}")
+          EOF
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
 
       - name: Check for duplicates
         id: check
