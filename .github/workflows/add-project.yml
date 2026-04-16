@@ -23,6 +23,13 @@ jobs:
           TECH=$(echo "${{ github.event.issue.body }}" | grep -oP 'tech:\s*\K.*')
           CATEGORY=$(echo "${{ github.event.issue.body }}" | grep -oP 'category:\s*\K.*')
 
+          # Check if this is an update
+          if echo "${{ github.event.issue.body }}" | grep -q "is_update"; then
+            IS_UPDATE="true"
+          else
+            IS_UPDATE="false"
+          fi
+
           # Normalize category to match marker keys
           CATEGORY_KEY=$(echo "$CATEGORY" | tr ' ' '-' | tr '[:upper:]' '[:lower:]')
           
@@ -33,20 +40,28 @@ jobs:
           echo "tech=$TECH" >> $GITHUB_OUTPUT
           echo "category=$CATEGORY" >> $GITHUB_OUTPUT
           echo "category_key=$CATEGORY_KEY" >> $GITHUB_OUTPUT
+          echo "is_update=$IS_UPDATE" >> $GITHUB_OUTPUT
 
       - name: Check for duplicates
         id: check
         run: |
           URL="${{ steps.project.outputs.url }}"
+          IS_UPDATE="${{ steps.project.outputs.is_update }}"
+          
           if grep -q "$URL" README.md; then
-            echo "duplicate=true" >> $GITHUB_OUTPUT
-            echo "Project already exists in README"
+            if [ "$IS_UPDATE" = "true" ]; then
+              echo "duplicate=false" >> $GITHUB_OUTPUT
+              echo "Will update existing project"
+            else
+              echo "duplicate=true" >> $GITHUB_OUTPUT
+              echo "Project already exists in README"
+            fi
           else
             echo "duplicate=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Update README
-        if: steps.check.outputs.duplicate == 'false'
+      - name: Update README (add new)
+        if: steps.check.outputs.duplicate == 'false' && steps.project.outputs.is_update == 'false'
         run: |
           # Create the new entry
           ENTRY="### [${{ steps.project.outputs.name }}](${{ steps.project.outputs.url }})
@@ -64,13 +79,47 @@ jobs:
           # Find the marker in README and insert after it
           sed -i "/<!-- CATEGORY:$CATEGORY_KEY:START -->/a\\$ENTRY" README.md
 
+      - name: Update README (update existing)
+        if: steps.check.outputs.duplicate == 'false' && steps.project.outputs.is_update == 'true'
+        run: |
+          # Create the updated entry
+          ENTRY="### [${{ steps.project.outputs.name }}](${{ steps.project.outputs.url }})
+
+          **Συγγραφέας**: ${{ steps.project.outputs.author }}  
+          **Περιγραφή**: ${{ steps.project.outputs.description }}  
+          **Τεχνολογίες**: ${{ steps.project.outputs.tech }}  
+          **Κατάσταση**: Ενημερώθηκε
+          
+          "
+
+          URL="${{ steps.project.outputs.url }}"
+
+          # Replace the existing entry (find line with the URL and replace the following lines)
+          # This uses awk to find the URL line and replace the block until next ### or end
+          awk -v entry="$ENTRY" '
+            /^\[.*\]\(https?:\/\// {
+              if (index($0, url)) {
+                found=1
+                print entry
+                next
+              }
+            }
+            found && /^### \[/ { found=0 }
+            !found { print }
+          ' url="$URL" README.md > README.md.tmp && mv README.md.tmp README.md
+
       - name: Commit and push
         if: steps.check.outputs.duplicate == 'false'
         run: |
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
           git add README.md
-          git commit -m "Add project from issue #${{ github.event.issue.number }}"
+          
+          if [ "${{ steps.project.outputs.is_update }}" = "true" ]; then
+            git commit -m "Update project from issue #${{ github.event.issue.number }}"
+          else
+            git commit -m "Add project from issue #${{ github.event.issue.number }}"
+          fi
           git push
 
       - name: Close issue (duplicate)

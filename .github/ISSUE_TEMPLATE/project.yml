@@ -53,3 +53,11 @@ body:
       - "Other"
     validations:
       required: true
+
+  - type: checkboxes
+    id: update_existing
+    label: "Update Options"
+    description: "Check this if you're updating an existing project"
+    options:
+      - label: "This is an update to an existing project"
+        id: is_update
