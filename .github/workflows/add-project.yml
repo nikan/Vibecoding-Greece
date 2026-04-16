@@ -15,17 +15,17 @@ jobs:
       - name: Extract project data
         id: project
         run: |
-          # GitHub issue forms output as markdown: **Label**: value
-          # Extract values using this format
-          PROJECT_NAME=$(echo "${{ github.event.issue.body }}" | grep -oP '\*\*Project Name\*\*:\s*\K.*')
-          PROJECT_URL=$(echo "${{ github.event.issue.body }}" | grep -oP '\*\*Project URL\*\*:\s*\K.*')
-          AUTHOR=$(echo "${{ github.event.issue.body }}" | grep -oP '\*\*Author Name\*\*:\s*\K.*')
-          DESCRIPTION=$(echo "${{ github.event.issue.body }}" | grep -oP '\*\*Description\*\*:\s*\K.*' | tr '\n' ' ')
-          TECH=$(echo "${{ github.event.issue.body }}" | grep -oP '\*\*Technologies\*\*:\s*\K.*')
-          CATEGORY=$(echo "${{ github.event.issue.body }}" | grep -oP '\*\*Category\*\*:\s*\K.*')
+          # GitHub issue forms provide form data via form_inputs context
+          # This is the correct way to access issue form field values
+          PROJECT_NAME="${{ github.event.issue.form_inputs.project_name }}"
+          PROJECT_URL="${{ github.event.issue.form_inputs.project_url }}"
+          AUTHOR="${{ github.event.issue.form_inputs.author_name }}"
+          DESCRIPTION="${{ github.event.issue.form_inputs.description }}"
+          TECH="${{ github.event.issue.form_inputs.tech }}"
+          CATEGORY="${{ github.event.issue.form_inputs.category }}"
 
-          # Check if this is an update (checkbox appears in issue body as marked)
-          if echo "${{ github.event.issue.body }}" | grep -q "This is an update to an existing project"; then
+          # Check if this is an update (from checkboxes)
+          if echo "${{ github.event.issue.form_inputs.update_existing }}" | grep -q "is_update"; then
             IS_UPDATE="true"
           else
             IS_UPDATE="false"
