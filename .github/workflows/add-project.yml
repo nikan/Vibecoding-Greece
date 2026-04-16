@@ -34,7 +34,19 @@ jobs:
           echo "category=$CATEGORY" >> $GITHUB_OUTPUT
           echo "category_key=$CATEGORY_KEY" >> $GITHUB_OUTPUT
 
+      - name: Check for duplicates
+        id: check
+        run: |
+          URL="${{ steps.project.outputs.url }}"
+          if grep -q "$URL" README.md; then
+            echo "duplicate=true" >> $GITHUB_OUTPUT
+            echo "Project already exists in README"
+          else
+            echo "duplicate=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Update README
+        if: steps.check.outputs.duplicate == 'false'
         run: |
           # Create the new entry
           ENTRY="### [${{ steps.project.outputs.name }}](${{ steps.project.outputs.url }})
@@ -53,6 +65,7 @@ jobs:
           sed -i "/<!-- CATEGORY:$CATEGORY_KEY:START -->/a\\$ENTRY" README.md
 
       - name: Commit and push
+        if: steps.check.outputs.duplicate == 'false'
         run: |
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
@@ -60,7 +73,16 @@ jobs:
           git commit -m "Add project from issue #${{ github.event.issue.number }}"
           git push
 
-      - name: Close and label issue
+      - name: Close issue (duplicate)
+        if: steps.check.outputs.duplicate == 'true'
+        run: |
+          gh issue comment ${{ github.event.issue.number }} --body "⚠️ This project already exists in the README. No changes made."
+          gh issue close ${{ github.event.issue.number }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Close issue (success)
+        if: steps.check.outputs.duplicate == 'false'
         run: |
           gh issue close ${{ github.event.issue.number }}
           gh issue edit ${{ github.event.issue.number }} --remove-label "project-submission"
