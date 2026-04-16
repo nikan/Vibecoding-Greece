@@ -19,40 +19,43 @@ jobs:
       - name: Extract project data
         id: project
         run: |
-          # Debug: print raw issue body to see actual format
-          echo "=== RAW BODY START ==="
+          echo "RAW_BODY_START"
           echo "${{ github.event.issue.body }}"
-          echo "=== RAW BODY END ==="
+          echo "RAW_BODY_END"
           
-          # Save body to file for inspection
-          echo "${{ github.event.issue.body }}" > /tmp/issue_body.txt
-          
-          # Try different parsing approaches
           python3 << 'EOF'
           import os
+          import re
 
           body = os.environ.get('ISSUE_BODY', '')
-          
-          # Print what we received
-          print("=== PARSED BODY ===")
-          print(repr(body))
-          print("=== END ===")
 
-          # Try multiple patterns
-          import re
-          
-          # Pattern 1: **Label**: value
-          # Pattern 2: Label\r\n-----\r\nvalue
-          # Pattern 3: just look for URLs
-          
-          urls = re.findall(r'https?://[^\s]+', body)
-          print(f"Found URLs: {urls}")
-          
-          # Try to find Project URL label
-          for pattern in [r'\*\*Project URL\*\*:\s*(.+)', r'Project URL\r?\n-+\r?\n(.+)', r'Project URL\r?\n(.+)']:
-              matches = re.findall(pattern, body, re.MULTILINE | re.IGNORECASE)
-              if matches:
-                  print(f"Pattern {pattern} matched: {matches}")
+          # Try multiple patterns to find values
+          def extract_any(pattern_type, label):
+              if pattern_type == 'bold':
+                  match = re.search(rf'\*\*{re.escape(label)}\*\*:\s*(.+)', body, re.MULTILINE)
+              elif pattern_type == 'h2':
+                  match = re.search(rf'## {re.escape(label)}\s*\n+(.+)', body, re.MULTILINE)
+              elif pattern_type == 'label_value':
+                  match = re.search(rf'{re.escape(label)}\r?\n-+\r?\n(.+)', body, re.MULTILINE)
+              if match:
+                  return match.group(1).strip()
+              return ''
+
+          # Try to extract URL with any pattern
+          project_url = (
+              extract_any('bold', 'Project URL') or
+              extract_any('h2', 'Project URL') or
+              extract_any('label_value', 'Project URL')
+          )
+
+          print(f"url={project_url}")
+          print(f"name=test")
+          print(f"author=test")
+          print(f"description=test")
+          print(f"tech=test")
+          print(f"category=Web development")
+          print(f"category_key=web-development")
+          print(f"is_update=false")
           EOF
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
