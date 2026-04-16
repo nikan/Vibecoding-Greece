@@ -28,34 +28,58 @@ jobs:
           import re
 
           body = os.environ.get('ISSUE_BODY', '')
+          github_output = os.environ['GITHUB_OUTPUT']
 
-          # Try multiple patterns to find values
-          def extract_any(pattern_type, label):
-              if pattern_type == 'bold':
-                  match = re.search(rf'\*\*{re.escape(label)}\*\*:\s*(.+)', body, re.MULTILINE)
-              elif pattern_type == 'h2':
-                  match = re.search(rf'## {re.escape(label)}\s*\n+(.+)', body, re.MULTILINE)
-              elif pattern_type == 'label_value':
-                  match = re.search(rf'{re.escape(label)}\r?\n-+\r?\n(.+)', body, re.MULTILINE)
-              if match:
-                  return match.group(1).strip()
-              return ''
+          def normalize_key(label):
+              return re.sub(r'[^a-z0-9]+', '_', label.lower()).strip('_')
 
-          # Try to extract URL with any pattern
-          project_url = (
-              extract_any('bold', 'Project URL') or
-              extract_any('h2', 'Project URL') or
-              extract_any('label_value', 'Project URL')
-          )
+          def parse_sections(text):
+              sections = {}
+              current_label = None
+              current_lines = []
 
-          print(f"url={project_url}")
-          print(f"name=test")
-          print(f"author=test")
-          print(f"description=test")
-          print(f"tech=test")
-          print(f"category=Web development")
-          print(f"category_key=web-development")
-          print(f"is_update=false")
+              for line in text.splitlines():
+                  heading = re.match(r'^\s{0,3}#{2,3}\s+(.+?)\s*$', line)
+                  if heading:
+                      if current_label is not None:
+                          sections[current_label] = '\n'.join(current_lines).strip()
+                      current_label = heading.group(1).strip()
+                      current_lines = []
+                  elif current_label is not None:
+                      current_lines.append(line)
+
+              if current_label is not None:
+                  sections[current_label] = '\n'.join(current_lines).strip()
+
+              return sections
+
+          sections = parse_sections(body)
+
+          project_name = sections.get('Project Name', '')
+          project_url = sections.get('Project URL', '').splitlines()[0].strip()
+          author = sections.get('Author Name', '')
+          description = sections.get('Description', '')
+          tech = sections.get('Technologies', '')
+          category = sections.get('Category', '').splitlines()[0].strip()
+          update_options = sections.get('Update Options', '')
+          is_update = 'true' if '[x]' in update_options.lower() else 'false'
+          category_key = category.lower().replace(' ', '-').replace('/', '-')
+
+          values = {
+              'name': project_name,
+              'url': project_url,
+              'author': author,
+              'description': description,
+              'tech': tech,
+              'category': category,
+              'category_key': category_key,
+              'is_update': is_update,
+          }
+
+          with open(github_output, 'a', encoding='utf-8') as fh:
+              for key, value in values.items():
+                  safe_key = normalize_key(key)
+                  fh.write(f'{safe_key}<<__VALUE__\n{value}\n__VALUE__\n')
           EOF
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
@@ -73,7 +97,7 @@ jobs:
             exit 1
           fi
           
-          if grep -q "$URL" README.md; then
+          if grep -Fq -- "$URL" README.md; then
             if [ "$IS_UPDATE" = "true" ]; then
               echo "duplicate=false" >> $GITHUB_OUTPUT
               echo "Will update existing project"
