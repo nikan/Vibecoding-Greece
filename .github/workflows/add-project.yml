@@ -4,6 +4,10 @@ on:
   issues:
     types: [labeled]
 
+permissions:
+  contents: write
+  issues: write
+
 jobs:
   add-project:
     if: github.event.label.name == 'project-submission'
@@ -16,7 +20,7 @@ jobs:
         id: project
         run: |
           # GitHub issue forms render the body as markdown
-          # Format: **Label** value or ## Label followed by value
+          # Format: **Label** value
           # We use Python for reliable parsing
           python3 << 'EOF'
           import os
@@ -24,20 +28,18 @@ jobs:
 
           body = os.environ.get('ISSUE_BODY', '')
 
+          # Print body for debugging
+          print("=== ISSUE BODY START ===", file=__import__('sys').stderr)
+          print(body, file=__import__('sys').stderr)
+          print("=== ISSUE BODY END ===", file=__import__('sys').stderr)
+
           # Helper to extract value after a label
-          def extract(label, body, multiline=False):
-              # Match **Label**: value or ## Label\nvalue
-              patterns = [
-                  rf'\*\*{re.escape(label)}\*\*:\s*(.+)',
-                  rf'## {re.escape(label)}\n+(.+)',
-              ]
-              for p in patterns:
-                  match = re.search(p, body, re.MULTILINE)
-                  if match:
-                      value = match.group(1).strip()
-                      if multiline:
-                          return value
-                      return value.split('\n')[0].strip()
+          def extract(label, body):
+              # Match **Label**: value
+              pattern = rf'\*\*{re.escape(label)}\*\*:\s*(.+)'
+              match = re.search(pattern, body, re.MULTILINE)
+              if match:
+                  return match.group(1).strip()
               return ''
 
           # Extract fields
@@ -53,6 +55,10 @@ jobs:
 
           # Normalize category key
           category_key = category.lower().replace(' ', '-').replace('/', '-')
+
+          print(f"DEBUG: name=[{project_name}]", file=__import__('sys').stderr)
+          print(f"DEBUG: url=[{project_url}]", file=__import__('sys').stderr)
+          print(f"DEBUG: category_key=[{category_key}]", file=__import__('sys').stderr)
 
           # Output for GitHub Actions
           print(f"name={project_name}")
@@ -72,6 +78,13 @@ jobs:
         run: |
           URL="${{ steps.project.outputs.url }}"
           IS_UPDATE="${{ steps.project.outputs.is_update }}"
+          
+          # Skip if URL is empty (parsing failed)
+          if [ -z "$URL" ]; then
+            echo "duplicate=true" >> $GITHUB_OUTPUT
+            echo "ERROR: Could not extract project URL from issue"
+            exit 1
+          fi
           
           if grep -q "$URL" README.md; then
             if [ "$IS_UPDATE" = "true" ]; then
