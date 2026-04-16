@@ -19,7 +19,9 @@
 
 ### Νέος Τρόπος Υποβολής (GitHub Issues)
 
-1. **Δημιουργήστε ένα Issue** - Κάντε κλικ στο "New Issue" και χρησιμοποιήστε τη φόρμα "Submit Project"
+[![Submit Project](https://img.shields.io/badge/-Submit_Project-2ea44f?style=flat&logo=github)](https://github.com/nikan/Vibecoding-Greece/issues/new?template=project.yml)
+
+1. **Κάντε κλικ στο παραπάνω κουμπί** - Ανοίγει απευθείας τη φόρμα υποβολής
 2. **Συμπληρώστε τα στοιχεία** - Όνομα έργου, URL, περιγραφή, τεχνολογίες, κατηγορία
 3. **Υποβάλετε** - Το issue θα εξεταστεί και θα προστεθεί αυτόματα στη λίστα
 4. **Για ενημερώσεις** - Επιλέξτε το checkbox "This is an update" στη φόρμα
