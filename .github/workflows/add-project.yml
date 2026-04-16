@@ -63,7 +63,15 @@ jobs:
           category = sections.get('Category', '').splitlines()[0].strip()
           update_options = sections.get('Update Options', '')
           is_update = 'true' if '[x]' in update_options.lower() else 'false'
-          category_key = category.lower().replace(' ', '-').replace('/', '-')
+          category_map = {
+              'Web development': 'web-development',
+              'Mobile development': 'mobile-development',
+              'Backend/APIs': 'backend/apis',
+              'Data Science/ML': 'data-science/ml',
+              'DevOps/Tools': 'devops/tools',
+              'Other': 'other',
+          }
+          category_key = category_map.get(category, category.lower().replace(' ', '-'))
 
           values = {
               'name': project_name,
@@ -124,9 +132,15 @@ jobs:
 
           # Get category marker key
           CATEGORY_KEY="${{ steps.project.outputs.category_key }}"
+          MARKER="<!-- CATEGORY:$CATEGORY_KEY:START -->"
+
+          if ! grep -Fq -- "$MARKER" README.md; then
+            echo "ERROR: Could not find category marker $MARKER"
+            exit 1
+          fi
 
           # Insert the entry after the category marker without relying on sed escaping
-          awk -v marker="<!-- CATEGORY:$CATEGORY_KEY:START -->" -v entry="$ENTRY" '
+          awk -v marker="$MARKER" -v entry="$ENTRY" '
             {
               print
               if ($0 == marker) {
