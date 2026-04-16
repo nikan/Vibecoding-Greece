@@ -3,15 +3,6 @@ description: "Submit your project to the Vibecoding-Greece community"
 labels: ["project-submission"]
 body:
   - type: input
-    id: project_name
-    attributes:
-      label: "Project Name"
-      description: "Name of your project"
-      placeholder: "My Awesome Project"
-    validations:
-      required: true
-
-  - type: input
     id: project_url
     attributes:
       label: "Project URL"
@@ -60,10 +51,25 @@ body:
     validations:
       required: true
 
-  - type: checkboxes
-    id: update_existing
+  - type: dropdown
+    id: submission_type
     attributes:
-      label: "Update Options"
-      description: "Check this if you're updating an existing project"
+      label: "Submission Type"
+      description: "Choose whether this is a new submission or an update to an existing project"
       options:
-        - label: "This is an update to an existing project"
+        - "New project"
+        - "Update existing project"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: project_status
+    attributes:
+      label: "Project Status"
+      description: "Current lifecycle stage of the project"
+      options:
+        - "Planning"
+        - "Under development"
+        - "Production"
+    validations:
+      required: true

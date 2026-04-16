@@ -28,6 +28,7 @@ jobs:
           import re
 
           body = os.environ.get('ISSUE_BODY', '')
+          issue_title = os.environ.get('ISSUE_TITLE', '').strip()
           github_output = os.environ['GITHUB_OUTPUT']
 
           def normalize_key(label):
@@ -55,14 +56,15 @@ jobs:
 
           sections = parse_sections(body)
 
-          project_name = sections.get('Project Name', '')
+          project_name = issue_title
           project_url = sections.get('Project URL', '').splitlines()[0].strip()
           author = sections.get('Author Name', '')
           description = sections.get('Description', '')
           tech = sections.get('Technologies', '')
           category = sections.get('Category', '').splitlines()[0].strip()
-          update_options = sections.get('Update Options', '')
-          is_update = 'true' if '[x]' in update_options.lower() else 'false'
+          submission_type = sections.get('Submission Type', '').splitlines()[0].strip()
+          is_update = 'true' if submission_type == 'Update existing project' else 'false'
+          project_status = sections.get('Project Status', '').splitlines()[0].strip()
           category_map = {
               'Web development': 'web-development',
               'Mobile development': 'mobile-development',
@@ -71,7 +73,13 @@ jobs:
               'DevOps/Tools': 'devops/tools',
               'Other': 'other',
           }
+          status_map = {
+              'Planning': 'Σχεδιασμός',
+              'Under development': 'Υπό Ανάπτυξη',
+              'Production': 'Σε Παραγωγή',
+          }
           category_key = category_map.get(category, category.lower().replace(' ', '-'))
+          readme_status = status_map.get(project_status, project_status)
 
           values = {
               'name': project_name,
@@ -81,6 +89,8 @@ jobs:
               'tech': tech,
               'category': category,
               'category_key': category_key,
+              'submission_type': submission_type,
+              'status': readme_status,
               'is_update': is_update,
           }
 
@@ -91,6 +101,7 @@ jobs:
           EOF
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
 
       - name: Check for duplicates
         id: check
@@ -126,7 +137,7 @@ jobs:
           **Συγγραφέας**: ${{ steps.project.outputs.author }}  
           **Περιγραφή**: ${{ steps.project.outputs.description }}  
           **Τεχνολογίες**: ${{ steps.project.outputs.tech }}  
-          **Κατάσταση**: Νέο
+          **Κατάσταση**: ${{ steps.project.outputs.status }}
           
           "
 
@@ -158,7 +169,7 @@ jobs:
           **Συγγραφέας**: ${{ steps.project.outputs.author }}  
           **Περιγραφή**: ${{ steps.project.outputs.description }}  
           **Τεχνολογίες**: ${{ steps.project.outputs.tech }}  
-          **Κατάσταση**: Ενημερώθηκε
+          **Κατάσταση**: ${{ steps.project.outputs.status }}
           
           "
 
