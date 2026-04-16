@@ -15,23 +15,24 @@ jobs:
       - name: Extract project data
         id: project
         run: |
-          # Extract form fields from issue body
-          PROJECT_NAME=$(echo "${{ github.event.issue.body }}" | grep -oP 'project_name:\s*\K.*')
-          PROJECT_URL=$(echo "${{ github.event.issue.body }}" | grep -oP 'project_url:\s*\K.*')
-          AUTHOR=$(echo "${{ github.event.issue.body }}" | grep -oP 'author_name:\s*\K.*')
-          DESCRIPTION=$(echo "${{ github.event.issue.body }}" | grep -oP 'description:\s*\K.*')
-          TECH=$(echo "${{ github.event.issue.body }}" | grep -oP 'tech:\s*\K.*')
-          CATEGORY=$(echo "${{ github.event.issue.body }}" | grep -oP 'category:\s*\K.*')
+          # GitHub issue forms output as markdown: **Label**: value
+          # Extract values using this format
+          PROJECT_NAME=$(echo "${{ github.event.issue.body }}" | grep -oP '\*\*Project Name\*\*:\s*\K.*')
+          PROJECT_URL=$(echo "${{ github.event.issue.body }}" | grep -oP '\*\*Project URL\*\*:\s*\K.*')
+          AUTHOR=$(echo "${{ github.event.issue.body }}" | grep -oP '\*\*Author Name\*\*:\s*\K.*')
+          DESCRIPTION=$(echo "${{ github.event.issue.body }}" | grep -oP '\*\*Description\*\*:\s*\K.*' | tr '\n' ' ')
+          TECH=$(echo "${{ github.event.issue.body }}" | grep -oP '\*\*Technologies\*\*:\s*\K.*')
+          CATEGORY=$(echo "${{ github.event.issue.body }}" | grep -oP '\*\*Category\*\*:\s*\K.*')
 
-          # Check if this is an update
-          if echo "${{ github.event.issue.body }}" | grep -q "is_update"; then
+          # Check if this is an update (checkbox appears in issue body as marked)
+          if echo "${{ github.event.issue.body }}" | grep -q "This is an update to an existing project"; then
             IS_UPDATE="true"
           else
             IS_UPDATE="false"
           fi
 
-          # Normalize category to match marker keys
-          CATEGORY_KEY=$(echo "$CATEGORY" | tr ' ' '-' | tr '[:upper:]' '[:lower:]')
+          # Normalize category to match marker keys (replace / with -)
+          CATEGORY_KEY=$(echo "$CATEGORY" | tr ' ' '-' | tr '[:upper:]' '[:lower:]' | sed 's/\//-/g')
           
           echo "name=$PROJECT_NAME" >> $GITHUB_OUTPUT
           echo "url=$PROJECT_URL" >> $GITHUB_OUTPUT
@@ -97,7 +98,7 @@ jobs:
           # Replace the existing entry (find line with the URL and replace the following lines)
           # This uses awk to find the URL line and replace the block until next ### or end
           awk -v entry="$ENTRY" '
-            /^\[.*\]\(https?:\/\// {
+            /^### \[.*\]\(https?:\/\// {
               if (index($0, url)) {
                 found=1
                 print entry
