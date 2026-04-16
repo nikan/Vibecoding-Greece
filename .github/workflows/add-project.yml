@@ -125,8 +125,15 @@ jobs:
           # Get category marker key
           CATEGORY_KEY="${{ steps.project.outputs.category_key }}"
 
-          # Find the marker in README and insert after it
-          sed -i "/<!-- CATEGORY:$CATEGORY_KEY:START -->/a\\$ENTRY" README.md
+          # Insert the entry after the category marker without relying on sed escaping
+          awk -v marker="<!-- CATEGORY:$CATEGORY_KEY:START -->" -v entry="$ENTRY" '
+            {
+              print
+              if ($0 == marker) {
+                print entry
+              }
+            }
+          ' README.md > README.md.tmp && mv README.md.tmp README.md
 
       - name: Update README (update existing)
         if: steps.check.outputs.duplicate == 'false' && steps.project.outputs.is_update == 'true'
